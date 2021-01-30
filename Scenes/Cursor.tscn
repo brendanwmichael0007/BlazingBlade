@@ -1,0 +1,109 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Scenes/Cursor.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/New Piskel-1.png (5).png" type="Texture" id=2]
+[ext_resource path="res://Sprites/New Piskel-2.png (1).png" type="Texture" id=3]
+[ext_resource path="res://Scripts/States/Moveable/Selected.gd" type="Script" id=4]
+[ext_resource path="res://Scripts/States/States.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/States/Moveable/Hovering.gd" type="Script" id=6]
+[ext_resource path="res://Fonts/Retro Gaming.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://Scripts/States/DisplayActions.gd" type="Script" id=8]
+[ext_resource path="res://Scenes/MovementGrid.gd" type="Script" id=9]
+[ext_resource path="res://Scenes/AnimationPlayer.gd" type="Script" id=10]
+[ext_resource path="res://Audio/SFX/Cursor/Select.wav" type="AudioStream" id=11]
+[ext_resource path="res://Audio/SFX/Cursor/oops.wav" type="AudioStream" id=12]
+[ext_resource path="res://Audio/SFX/Cursor/Cursor.wav" type="AudioStream" id=13]
+[ext_resource path="res://Scenes/Selections.gd" type="Script" id=14]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Walk"
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "In_Out",
+"speed": 2.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 4.38504, 4.15707 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 14
+font_data = ExtResource( 7 )
+
+[node name="Cursor" type="Area2D"]
+collision_mask = 2
+script = ExtResource( 1 )
+
+[node name="States" type="Node" parent="."]
+script = ExtResource( 5 )
+
+[node name="Hovering" type="Node" parent="States"]
+script = ExtResource( 6 )
+
+[node name="Selected" type="Node" parent="States"]
+script = ExtResource( 4 )
+
+[node name="SelectionDisplay" type="Node" parent="States"]
+script = ExtResource( 8 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 7.22
+anims/Walk = SubResource( 1 )
+script = ExtResource( 10 )
+
+[node name="Tween" type="Tween" parent="."]
+playback_speed = 30.0
+playback/speed = 30.0
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 2 )
+animation = "In_Out"
+frame = 1
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.202026, 0.40406 )
+scale = Vector2( 2, 2 )
+shape = SubResource( 3 )
+
+[node name="MovementGrid" type="TileMap" parent="."]
+cell_size = Vector2( 32, 32 )
+format = 1
+script = ExtResource( 9 )
+
+[node name="SelectSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+
+[node name="InvalidSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+
+[node name="MoveSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+
+[node name="Selections" type="ItemList" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -35.0
+margin_right = -34.0
+margin_bottom = 35.0
+custom_fonts/font = SubResource( 4 )
+items = [ "Attack", null, false, "Wait", null, false ]
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="area_entered" from="." to="." method="_on_Cursor_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_Cursor_area_exited"]
+[connection signal="moved" from="States/Hovering" to="." method="_on_Hovering_moved"]
+[connection signal="updateInitialPos" from="States/Hovering" to="." method="_on_Hovering_updateInitialPos"]
+[connection signal="updateInitialPos" from="States/Selected" to="." method="_on_Selected_updateInitialPos"]
+[connection signal="toggleItemList" from="States/SelectionDisplay" to="Selections" method="_on_SelectionDisplay_toggleItemList"]
+[connection signal="animation_finished" from="AnimationPlayer" to="States/Hovering" method="_on_AnimationPlayer_animation_finished"]
+[connection signal="actionSelected" from="Selections" to="States/SelectionDisplay" method="_on_Selections_actionSelected"]

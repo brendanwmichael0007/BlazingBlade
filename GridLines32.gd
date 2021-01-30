@@ -5,8 +5,11 @@ func _ready():
 #		 set_cellv(world_to_map(child.position), child.type)
 	pass
 
-func requestMovePosition(cursor, direction):
-	var cell_start = world_to_map(cursor.position)
+
+func getMovementCost(tilePosition):
+	pass
+
+func requestMovePosition(pawn, direction):
+	var cell_start = world_to_map(pawn.position)
 	var cell_target = cell_start + direction
 	return map_to_world(cell_target) + cell_size / 2
-

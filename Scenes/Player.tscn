@@ -5,9 +5,9 @@
 [ext_resource path="res://Textures/GreenBar.png" type="Texture" id=3]
 [ext_resource path="res://Textures/BlackBar.png" type="Texture" id=4]
 
-[sub_resource type="RectangleShape2D" id=6]
+[sub_resource type="RectangleShape2D" id=1]
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=2]
 resource_name = "Walk"
 
 [node name="Player" type="Area2D"]
@@ -16,10 +16,10 @@ collision_mask = 2
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 6 )
+shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Walk = SubResource( 7 )
+anims/Walk = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 7.15256e-07, 0 )

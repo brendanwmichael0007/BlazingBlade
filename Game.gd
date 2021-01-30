@@ -1,8 +1,7 @@
 extends Node2D
 
 func _ready():
-	$Music.play()
-	pass
+	$cam.set_zoom(Vector2(1.4,1.4)) # 17 x 10
 
 
 func _input(event):
