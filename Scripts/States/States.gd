@@ -10,7 +10,9 @@ var current_stateName = "hovering"
 func _ready():
 	for child in get_children():
 		child.connect("finished", self, "_change_state")
-	states = {"hovering":$Hovering, "selected":$Selected, "selectionDisplay":$SelectionDisplay}
+	states = {"hovering":$Hovering, "selected":$Selected, "selectionDisplay":$SelectionDisplay,
+			"selectTarget": $SelectTarget
+			}
 	initialize(startState)
 
 func initialize(start_state):

@@ -6,9 +6,11 @@ export var attackRange = 2
 var hp = 100
 var damage = 100
 
-enum STATES {ALIVE,DEAD}
+var stats = {"STR":1}
 
-var state = STATES.ALIVE
+enum STATES {READY,IDLE}
+
+var state = STATES.READY
 var pos = position
 signal animationComplete
 
@@ -24,8 +26,15 @@ func attack(amount):
 func receive_damage(amount):
 	hp -= amount
 	if hp <= 0:
-		state = STATES.DEAD
-		sprite.visible(false)
+		die()
+
+func setIdle():
+	state = STATES.IDLE
+	$Sprite.modulate = Color(100,100,100,255)
+
+func die():
+	#play death animation/sounds
+	queue_free()
 
 func move_to(cursorPosition):
 	set_process(false)

@@ -20,4 +20,7 @@ func _on_animation_finished(anim_name):
 
 
 func _on_Selections_actionSelected(selection):
+		if selection == "Attack":
+			emit_signal("finished","selectTarget")
+			return
 		emit_signal("finished","hovering")

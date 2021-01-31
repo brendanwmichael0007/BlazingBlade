@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Scenes/Cursor.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/New Piskel-1.png (5).png" type="Texture" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://Audio/SFX/Cursor/oops.wav" type="AudioStream" id=12]
 [ext_resource path="res://Audio/SFX/Cursor/Cursor.wav" type="AudioStream" id=13]
 [ext_resource path="res://Scenes/Selections.gd" type="Script" id=14]
+[ext_resource path="res://Scripts/States/SelectTarget.gd" type="Script" id=15]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Walk"
@@ -48,6 +49,9 @@ script = ExtResource( 4 )
 
 [node name="SelectionDisplay" type="Node" parent="States"]
 script = ExtResource( 8 )
+
+[node name="SelectTarget" type="Node" parent="States"]
+script = ExtResource( 15 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_speed = 7.22
@@ -105,5 +109,7 @@ __meta__ = {
 [connection signal="updateInitialPos" from="States/Hovering" to="." method="_on_Hovering_updateInitialPos"]
 [connection signal="updateInitialPos" from="States/Selected" to="." method="_on_Selected_updateInitialPos"]
 [connection signal="toggleItemList" from="States/SelectionDisplay" to="Selections" method="_on_SelectionDisplay_toggleItemList"]
+[connection signal="attack" from="States/SelectTarget" to="." method="_on_SelectTarget_attack"]
 [connection signal="animation_finished" from="AnimationPlayer" to="States/Hovering" method="_on_AnimationPlayer_animation_finished"]
 [connection signal="actionSelected" from="Selections" to="States/SelectionDisplay" method="_on_Selections_actionSelected"]
+[connection signal="actionSelected" from="Selections" to="." method="_on_Selections_actionSelected"]

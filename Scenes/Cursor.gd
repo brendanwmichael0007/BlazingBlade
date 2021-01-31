@@ -8,13 +8,11 @@ onready var rangeTiles = get_parent().get_node("RangeLayer")
 onready var obstacleTiles = get_parent().get_node("ObstacleLayer")
 onready var terrainLabel = get_parent().get_node("TerrainLabel")
 
-signal displaySelections
-
 var initialCharPosition
 var inRangeEnemies = []
 var hoveredCharacter = null
 var selectedCharacter = null
-var selection = null
+var selection
 onready var target_position = 0
 
 class tileDictionary:
@@ -94,13 +92,17 @@ func toInitialPosition():
 		position = initialCharPosition
 	
 
-## signals
-func _on_ItemList_actionSelected(selected):
-	selection = selected
-	if(selected == "Attack"):
-		handleAttack()
-	else:
+func moveToTarget():
+	if inRangeEnemies.empty():
+		print("inRange empty")
 		return
+	print(inRangeEnemies)
+	#change to alternate targets
+	var newPosition = inRangeEnemies[0].getPosition()
+	position = newPosition
+
+## signals
+
 
 func handleAttack():
 	var tilePosition = Grid.world_to_map(position)
@@ -110,6 +112,12 @@ func handleAttack():
 	
 func select_valid():
 	return selectedCharacter == null;
+	
+#func _on_Enemy_withinRange(id):
+#	if $States.current_stateName != "SelectTarget":
+#		return
+#	var enemy = instance_from_id(id)
+#	inRangeEnemies.append(enemy)
 
 func _on_Cursor_area_entered(area):
 	if area.is_in_group("Enemies"):
@@ -124,12 +132,6 @@ func _on_Cursor_area_exited(area):
 	if $States.current_stateName != "selected":
 		rangeTiles.clear()
 
-func _on_Enemy_withinRange(id):
-	var enemy = instance_from_id(id)
-	inRangeEnemies.append(enemy)
-	
-func update_look_direction(direction):
-	sprite.rotation = direction.angle()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	emit_signal("animationComplete")
@@ -146,3 +148,22 @@ func _on_Hovering_moved():
 	var cord = Grid.world_to_map(position)
 	var terrainCost = obstacleTiles.getMovementCost(cord)
 	setTerrainLabel("Terrain: " + terrainType + "\n" + "Move: -" + str(terrainCost))
+
+
+func _on_Selections_actionSelected(selection):
+	match selection:
+		"Attack":
+			print("oww")
+		"Wait":
+			return
+
+
+func _on_Enemy_withinRange(id):
+#	if $States.current_stateName != "SelectTarget":
+#		return
+	var enemy = instance_from_id(id)
+	inRangeEnemies.append(enemy)
+
+
+func _on_SelectTarget_attack():
+	inRangeEnemies[0].receiveDamage(100)
